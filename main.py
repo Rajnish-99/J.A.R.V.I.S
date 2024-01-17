@@ -32,4 +32,25 @@ while True:
             say(f"Opening {site[0]} Sir..")
             webbrowser.open(site[1])
 
+    import platform
+    import subprocess
+
+    system_platform = platform.system()
+
+    if "open music" in query:
+        music_path = "/Users/rajnishranjan/Downloads/better-day-186374.mp3"
+
+        if system_platform == "Windows":
+            os.startfile(music_path)
+        elif system_platform == "Darwin":  # macOS
+            subprocess.call(["open", music_path])
+        elif system_platform == "Linux":
+            subprocess.call(["xdg-open", music_path])
+
+    if "open facetime".lower() in query.lower():
+        face_path = "/System/Applications/FaceTime.app"
+        if system_platform == "Darwin":
+            subprocess.call(["open", face_path])
+
+# start from 45 minutes again
     # say(query)

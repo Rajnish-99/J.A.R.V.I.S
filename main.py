@@ -1,6 +1,60 @@
 import speech_recognition as sr
 import os
 import webbrowser
+import platform
+import subprocess
+import random
+
+from openai import OpenAI
+from config import apikey
+client = OpenAI(api_key=apikey)
+
+
+# def ai(prompt):
+#     text = f"Openai response for prompt: {prompt}\n ******* \n\n"
+#
+#     response = client.completions.create(
+#         model="gpt-3.5-turbo-instruct",
+#         prompt=prompt,
+#         temperature=1,
+#         max_tokens=256,
+#         top_p=1,
+#         frequency_penalty=0,
+#         presence_penalty=0
+#     )
+#
+#     text += response["choices"][0]["text"]
+#
+#     if not os.path.exists("Openai"):
+#         os.mkdir("Openai")
+#
+#
+#     with open(f"Openai/prompt- {random.randint(1,23256327635)}", "w") as f:
+#         f.write(text)
+
+def ai(prompt):
+    text = f"Openai response for prompt: {prompt}\n ******* \n\n"
+
+    response = client.completions.create(
+        model="gpt-3.5-turbo-instruct",
+        prompt=prompt,
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    # the response from the open ai is a object not a dictionary
+    text += response.choices[0].text
+
+    if not os.path.exists("Openai"):
+        os.mkdir("Openai")
+
+    with open(f"Openai/prompt- {random.randint(1, 23256327635)}", "w") as f:
+        f.write(text)
+
+
 
 
 def say(text):
@@ -32,8 +86,7 @@ while True:
             say(f"Opening {site[0]} Sir..")
             webbrowser.open(site[1])
 
-    import platform
-    import subprocess
+
 
     system_platform = platform.system()
 
@@ -51,6 +104,10 @@ while True:
         face_path = "/System/Applications/FaceTime.app"
         if system_platform == "Darwin":
             subprocess.call(["open", face_path])
+
+
+    if "using artificial intelligence".lower() in query.lower():
+        ai(prompt=query)
 
 # start from 45 minutes again
     # say(query)

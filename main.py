@@ -10,27 +10,35 @@ from config import apikey
 client = OpenAI(api_key=apikey)
 
 
-# def ai(prompt):
-#     text = f"Openai response for prompt: {prompt}\n ******* \n\n"
-#
-#     response = client.completions.create(
-#         model="gpt-3.5-turbo-instruct",
-#         prompt=prompt,
-#         temperature=1,
-#         max_tokens=256,
-#         top_p=1,
-#         frequency_penalty=0,
-#         presence_penalty=0
-#     )
-#
-#     text += response["choices"][0]["text"]
-#
-#     if not os.path.exists("Openai"):
-#         os.mkdir("Openai")
-#
-#
-#     with open(f"Openai/prompt- {random.randint(1,23256327635)}", "w") as f:
-#         f.write(text)
+chatStr = ""
+def chat(query):
+    global chatStr
+    chatStr += f"Rajnish : {query}\n Jarvis:"
+    response = client.completions.create(
+        model="gpt-3.5-turbo-instruct",
+        prompt= chatStr,
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    # the response from the open ai is a object not a dictionary
+    say(response.choices[0].text)
+    chatStr += f"{response.choices[0].text}\n"
+    return response.choices[0].text
+
+    if not os.path.exists("Openai"):
+        os.mkdir("Openai")
+
+    with open(f"Openai/prompt- {random.randint(1, 23256327635)}", "w") as f:
+        f.write(text)
+
+
+
+
+
 
 def ai(prompt):
     text = f"Openai response for prompt: {prompt}\n ******* \n\n"
@@ -109,5 +117,17 @@ while True:
     if "using artificial intelligence".lower() in query.lower():
         ai(prompt=query)
 
-# start from 45 minutes again
+
+    if "Jarvis Quit".lower() in query.lower():
+        exit()
+
+
+    if "reset chat".lower() in query.lower():
+        chatStr=""
+
+
+    else:
+        print("Chatting")
+        chat(query)
+
     # say(query)
